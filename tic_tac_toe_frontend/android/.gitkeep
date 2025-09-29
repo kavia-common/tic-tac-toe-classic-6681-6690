@@ -1,0 +1,19 @@
+# Directory structure for Android build
+android/
+  ├── app/
+  │   ├── src/
+  │   │   ├── debug/
+  │   │   │   └── java/
+  │   │   │       └── com/
+  │   │   │           └── tictactoe/
+  │   │   │               └── game/
+  │   │   └── main/
+  │   │       ├── java/
+  │   │       │   └── com/
+  │   │       │       └── tictactoe/
+  │   │       │           └── game/
+  │   │       └── res/
+  │   │           └── values/
+  │   └── build/
+  └── gradle/
+      └── wrapper/

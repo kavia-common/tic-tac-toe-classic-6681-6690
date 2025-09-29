@@ -1,0 +1,30 @@
+// Initialization verification script
+def verifyGradleWrapper() {
+    def wrapperFile = file("${rootDir}/gradlew")
+    def wrapperExists = wrapperFile.exists()
+    def wrapperExecutable = wrapperFile.canExecute()
+    
+    if (!wrapperExists || !wrapperExecutable) {
+        println "Configuring Gradle wrapper..."
+        wrapperFile.text = file("${rootDir}/gradlew.template").text
+        wrapperFile.setExecutable(true)
+        
+        // Create wrapper jar directory
+        file("${rootDir}/gradle/wrapper").mkdirs()
+    }
+    
+    // Ensure properties exist
+    def propsFile = file("${rootDir}/gradle/wrapper/gradle-wrapper.properties")
+    if (!propsFile.exists()) {
+        propsFile.text = """
+            distributionBase=GRADLE_USER_HOME
+            distributionPath=wrapper/dists
+            distributionUrl=https\\://services.gradle.org/distributions/gradle-7.5.1-bin.zip
+            zipStoreBase=GRADLE_USER_HOME
+            zipStorePath=wrapper/dists
+        """.stripIndent()
+    }
+}
+
+// Execute verification
+verifyGradleWrapper()

@@ -1,0 +1,42 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+    }
+
+    // Initialize the wrapper
+    def wrapperTask = project.tasks.wrapper
+    wrapperTask.gradleVersion = '7.5.1'
+    wrapperTask.distributionType = 'bin'
+    wrapperTask.execute()
+}
+
+afterEvaluate {
+    tasks.named('wrapper').configure {
+        distributionType = Wrapper.DistributionType.BIN
+        gradleVersion = '7.5.1'
+    }
+}
+
+task ensureGradleWrapper {
+    doLast {
+        def wrapperFile = file('gradlew')
+        if (!wrapperFile.exists() || !wrapperFile.canExecute()) {
+            wrapperFile.setExecutable(true)
+        }
+    }
+}
+
+// Make all tasks depend on wrapper setup
+allprojects {
+    tasks.all { task ->
+        if (task.name != 'ensureGradleWrapper') {
+            task.dependsOn ':ensureGradleWrapper'
+        }
+    }
+}

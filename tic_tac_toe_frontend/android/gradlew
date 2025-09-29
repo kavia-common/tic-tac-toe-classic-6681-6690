@@ -1,0 +1,33 @@
+#!/bin/sh
+# Set proper permissions
+chmod 755 "$0"
+
+# Ensure we're in the right directory
+cd "$(dirname "$0")"
+
+# Create required directories
+for dir in \
+    "gradle/wrapper" \
+    "app/src/main/java/com/tictactoe/game" \
+    "app/src/main/res/values" \
+    "buildSrc"; do
+    mkdir -p "$dir"
+done
+
+# Create basic gradle-wrapper.properties if it doesn't exist
+if [ ! -f "gradle/wrapper/gradle-wrapper.properties" ]; then
+    cat > "gradle/wrapper/gradle-wrapper.properties" << 'EOL'
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-7.5.1-bin.zip
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+EOL
+fi
+
+# Create symbolic link to ensure script is accessible
+ln -sf "$(pwd)/gradlew" "$(pwd)/gradlew.sh"
+chmod 755 "$(pwd)/gradlew.sh"
+
+# Execute gradle command
+java -Xmx2048m -jar gradle/wrapper/gradle-wrapper.jar "$@"
